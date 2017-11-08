@@ -17,7 +17,7 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
     """Tests a synapses distribution of different m-types (AA, BP, BS, CCKBC, Ivy, OLM, PC, PPA, SCA, Tri)
        across the layers of Hippocampus CA1 (SO, SP, SR, SLM)"""
     score_type = sciunit.scores.ZScore
-    id = "/tests/10?version=13"
+    id = "/tests/12?version=15"
 
     def __init__(self, observation={}, name="CA1 laminar_distribution_synapses test"):
 
