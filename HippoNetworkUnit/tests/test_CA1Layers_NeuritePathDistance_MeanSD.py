@@ -1,6 +1,7 @@
 import sciunit
 import sciunit.scores
-import morphounit.capabilities as cap
+# import morphounit.capabilities as cap
+import HippoNetworkUnit.capabilities as cap
 
 import quantities
 import os
@@ -35,46 +36,46 @@ class CA1NeuritePathDistanceTest(sciunit.Test):
         """
         This accepts data input in the form:
         ***** (observation) *****
-	    {
-             "SLM": {'PathDistance': {'mean':'X0 um', 'std': 'Y0 um'}},
-              "SR": {'PathDistance': {'mean':'X1 um', 'std': 'Y1 um'}},
-              "SP": {'PathDistance': {'mean':'X2 um', 'std': 'Y2 um'}},
-              "SO": {'PathDistance': {'mean':'X3 um', 'std': 'Y3 um'}}
-            }
+        {
+        "SLM": {'PathDistance': {'mean':'X0 um', 'std': 'Y0 um'}},
+        "SR": {'PathDistance': {'mean':'X1 um', 'std': 'Y1 um'}},
+        "SP": {'PathDistance': {'mean':'X2 um', 'std': 'Y2 um'}},
+        "SO": {'PathDistance': {'mean':'X3 um', 'std': 'Y3 um'}}
+        }
         ***** (prediction) *****
-	    {
-             "SLM": {'PathDistance': {'value':'X0 um'}},
-              "SR": {'PathDistance': {'value':'X1 um'}},
-              "SP": {'PathDistance': {'value':'X2 um'}},
-              "SO": {'PathDistance': {'value':'X3 um'}}
-            }
+        {
+        "SLM": {'PathDistance': {'value':'X0 um'}},
+        "SR": {'PathDistance': {'value':'X1 um'}},
+        "SP": {'PathDistance': {'value':'X2 um'}},
+        "SO": {'PathDistance': {'value':'X3 um'}}
+        }
 
         It splits the values of mean, std and value to numeric quantities
         and their units (via quantities package)
         """
         for key0 in data.keys():
-	       for key, val in data[key0]["PathDistance"].items():
-		  try:
-		     quantity_parts = val.split()
-		     number, units_str = float(quantity_parts[0]), " ".join(quantity_parts[1:])
-		     assert (units_str == self.units.symbol)		     
-		     data[key0]["PathDistance"][key] = quantities.Quantity(number, self.units)
-                  except AssertionError:
-                     raise sciunit.Error("Values not in appropriate format. Required units: ", self.units.symbol)
-                  except:
-                     raise sciunit.Error("Values not in appropriate format.")
+            for key, val in data[key0]["PathDistance"].items():
+                try:
+                    quantity_parts = val.split()
+                    number, units_str = float(quantity_parts[0]), " ".join(quantity_parts[1:])
+                    assert (units_str == self.units.symbol)
+                    data[key0]["PathDistance"][key] = quantities.Quantity(number, self.units)
+                except AssertionError:
+                    raise sciunit.Error("Values not in appropriate format. Required units: ", self.units.symbol)
+                except:
+                    raise sciunit.Error("Values not in appropriate format.")
         return data
 
     # ----------------------------------------------------------------------
 
     def validate_observation(self, observation):
         for key0 in data.keys():
-	   for key1 in data[key0].keys():	
-	       for val in data[key0][key1].values():
-                  try:
-                     assert type(val) is quantities.Quantity
-                  except Exception as e:
-                     raise sciunit.ObservationError(("Observation must be of the form "
+            for key1 in data[key0].keys():
+                for val in data[key0][key1].values():
+                    try:
+                        assert type(val) is quantities.Quantity
+                    except Exception as e:
+                        raise sciunit.ObservationError(("Observation must be of the form "
                                                      "{'mean': XX um,'std': YY um}"))
 
     #----------------------------------------------------------------------
@@ -112,25 +113,25 @@ class CA1NeuritePathDistanceTest(sciunit.Test):
 
         # save figure with Z-score data
         for key0 in observation.keys():
-	   score_lf[key0] = float(str(zscores[key0]).split()[2])
+            score_lf[key0] = float(str(zscores[key0]).split()[2])
 
-	layers = range(len(observation))
-	width = 0.35
-	plt.bar(layers, score_lf, width, color='blue')
-	plt.figlegend(ax_score, ('Z-Score',), 'upper right')
-	plt.ylabel("Score value")
+        layers = range(len(observation))
+        width = 0.35
+        plt.bar(layers, score_lf, width, color='blue')
+        plt.figlegend(ax_score, ('Z-Score',), 'upper right')
+        plt.ylabel("Score value")
 
-	frame_bars = plt.gca()
-	frame_bars.axes.get_xaxis().set_visible(False)
+        frame_bars = plt.gca()
+        frame_bars.axes.get_xaxis().set_visible(False)
 
-	fig_bars = plt.gcf()
-	fig_bars.set_size_inches(8, 6)
+        fig_bars = plt.gcf()
+        fig_bars.set_size_inches(8, 6)
 
         filename = path_test_output + 'score_plot' + '.pdf'
         plt.savefig(filename, dpi=600,)
         self.figures.append(filename)
 
-
+        score = score_lf[key0][0]
         return score
 
     #----------------------------------------------------------------------

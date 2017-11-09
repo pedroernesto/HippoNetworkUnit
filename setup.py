@@ -12,7 +12,7 @@ setup(
                   # capabilities 
                   "HippoNetworkUnit.capabilities",
                   # tests
-                  "HippoNetworkUnit.tests"
+                  "HippoNetworkUnit.tests",
                   # scores
                   "HippoNetworkUnit.scores"
                   ],

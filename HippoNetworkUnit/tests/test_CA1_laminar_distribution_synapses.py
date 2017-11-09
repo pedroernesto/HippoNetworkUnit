@@ -19,12 +19,12 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
     score_type = sciunit.scores.ZScore
     id = "/tests/12?version=15"
 
-    def __init__(self, observation={}, name="CA1 laminar_distribution_synapses test"):
+    def __init__(self, observation={}, name="CA1 laminar_distribution_synapses Test"):
 
         description = ("Tests the synapses distribution of different m-types across the Hippocampus CA1 layers")
         require_capabilities = (cap.Provides_CA1_laminar_distribution_synapses_Info,)
-	units = quantities.dimensionless
 
+        self.units = quantities.dimensionless
         self.figures = []
         observation = self.format_data(observation)
         sciunit.Test.__init__(self, observation, name)
@@ -92,24 +92,24 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
 
         Returns a new dictionary of the form 
 		{ "AA":[X0, X1, X2, X3, X4], "BP":[...] , "BS":[...], "CCKBC":[...], "Ivy":[...], "OLM":[...], "PC":[...], "PPA":[...], "SCA":[...], "Tri":[...] }
-	"""
+	    """
 	
-	data_list_0 = list()
-	for key0 in data.keys(): # m-types neurons (AA, BP, BS, CCKBC, Ivy, OLM, PC, PPA, SCA, Tri)
-	   data_list_1 = list()
-	   for key1, dict1 in data[key0].items(): ''' layers (key1) of CA1 subregion of Hippocampus (SO, SP, SR, SLM) and OUT (for prediction data), 
-                                                      with its synapses fraction dictionary (dict1) for the m-type cell'''
-	      try:
-	         synapses_fraction = float(dict1.values()[0])
-                 assert( synapses_fraction <= 1.0 )
-	         data_list_1.extend( synapses_fraction )
-              except:
-                 raise sciunit.Error("Values not in appropriate format. Synapses fraction of an m-type cell must be dimensionless and not larger than 1.0")
+        data_list_0 = list()
+        for key0 in data.keys(): # m-types neurons (AA, BP, BS, CCKBC, Ivy, OLM, PC, PPA, SCA, Tri)
+            data_list_1 = list()
+            for key1, dict1 in data[key0].items(): # layers (key1) of CA1 subregion of Hippocampus (SO, SP, SR, SLM) and OUT (for prediction data),
+                                                    # with its synapses fraction dictionary (dict1) for the m-type cell'''
+                try:
+                    synapses_fraction = float(dict1.values()[0])
+                    assert( synapses_fraction <= 1.0 )
+                    data_list_1.extend( synapses_fraction )
+                except:
+                    raise sciunit.Error("Values not in appropriate format. Synapses fraction of an m-type cell must be dimensionless and not larger than 1.0")
 
-	   if ("OUT" not in dict1.keys()): data_list_1.extend( 0.0 )  # Observation data
-	   data_list_1_q = quantities.Quantity(data_list_1, self.units)
-
-           data_list_0.append(data_list_1_q)
+            if "OUT" not in dict1.keys(): # Observation data
+                data_list_1.extend([0.0])
+            data_list_1_q = quantities.Quantity(data_list_1, self.units)
+            data_list_0.append(data_list_1_q)
  
         data_new_dict = dict.fromkeys(data.keys(), data_list_0)
         return data_new_dict
@@ -117,13 +117,12 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
     # ----------------------------------------------------------------------
 
     def validate_observation(self, observation):
-
-       for val in observation.values(): ''' lists with synapses fraction in each Hippocampus CA1 layer (SO, SP, SR, SLM) and OUT (=0.0 by default)
-                                            of each m-type cell (AA, BP, BS, CCKBC, Ivy, OLM, PC, PPA, SCA, Tri)'''
-          try:
-             assert type(val) is quantities.Quantity
-          except:
-             raise sciunit.ObservationError("Observation about synapses fraction in each CA1-layer must be of the form {'mean': XX}")
+        for val in observation.values(): # lists with synapses fraction in each Hippocampus CA1 layer (SO, SP, SR, SLM) and OUT (=0.0 by default)
+                                         # of each m-type cell (AA, BP, BS, CCKBC, Ivy, OLM, PC, PPA, SCA, Tri)'''
+            try:
+                assert type(val) is quantities.Quantity
+            except:
+                raise sciunit.ObservationError("Observation about synapses fraction in each CA1-layer must be of the form {'mean': XX}")
 
     #----------------------------------------------------------------------
 
@@ -151,13 +150,13 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
 
         ZScores_cell = dict()
         for key0 in observation.keys():
-	   ZScores_layer = list() 
-	   for index in range(len(observation[key0])):
-              ZScores_layer[index] = sciunit.scores.ZScore.compute(observation[key0][index], prediction[key0][index])
-	   ZScores_cell[key] = ZScores_layer[index]
+            ZScores_layer = list()
+            for index in range(len(observation[key0])):
+                ZScores_layer[index] = sciunit.scores.ZScore.compute(observation[key0][index], prediction[key0][index])
+            ZScores_cell[key] = ZScores_layer[index]
 
         # self.score = morphounit.scores.CombineZScores.compute(zscores.values())
-	self.score = ZScores_cell["PC"][0]
+	    self.score = ZScores_cell["PC"][0]
 
         # create output directory
         path_test_output = self.directory_output + 'CA1_laminar_distribution_synapses /' + self.model_name + '/'
@@ -165,27 +164,28 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
            os.makedirs(path_test_output)
 
         # save figure with Z-score data
-	'''
-        for key0 in observation.keys():
-	   score_lf[key0] = float(str(zscores[key0]).split()[2])
-	'''
-	# layers = range(len(observation))
-	width = 0.35
-	# plt.bar(layers, score_lf, width, color='blue')
-	plt.figlegend(ax_score, ('Z-Score',), 'upper right')
-	plt.ylabel("Score value")
+        '''
+            for key0 in observation.keys():
+           score_lf[key0] = float(str(zscores[key0]).split()[2])
+        '''
+        # layers = range(len(observation))
+        width = 0.35
+        # plt.bar(layers, score_lf, width, color='blue')
+        plt.figlegend(ax_score, ('Z-Score',), 'upper right')
+        plt.ylabel("Score value")
 
-	frame_bars = plt.gca()
-	frame_bars.axes.get_xaxis().set_visible(False)
+        frame_bars = plt.gca()
+        frame_bars.axes.get_xaxis().set_visible(False)
 
-	fig_bars = plt.gcf()
-	fig_bars.set_size_inches(8, 6)
+        fig_bars = plt.gcf()
+        fig_bars.set_size_inches(8, 6)
 
-        filename = path_test_output + 'score_plot' + '.pdf'
+        filename = \
+        path_test_output + 'score_plot' + '.pdf'
         plt.savefig(filename, dpi=600,)
         self.figures.append(filename)
 
-
+        score = ZScores_cell["PC"][0]
         return score
 
     #----------------------------------------------------------------------
@@ -193,4 +193,3 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
     def bind_score(self, score, model, observation, prediction):
         score.related_data["figures"] = self.figures
         return score
-
