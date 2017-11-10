@@ -22,7 +22,7 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
     def __init__(self, observation={}, name="CA1 laminar_distribution_synapses Test"):
 
         description = ("Tests the synapses distribution of different m-types across the Hippocampus CA1 layers")
-        require_capabilities = (cap.Provides_CA1_laminar_distribution_synapses_Info,)
+        require_capabilities = (cap.Provides_CA1_laminar_distribution_synapses_info,)
 
         self.units = quantities.dimensionless
         self.figures = []
@@ -36,78 +36,65 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
         """
         This accepts data input in the form:
         ***** (observation) *****
-		{ "AA":{	
-		   	"SO": {"mean": "X0"},
-		   	"SP": {"mean": "X1"},
-		   	"SR": {"mean": "X2"},
-		   	"SLM":{"mean": "X3"},
-		  	},
-		  "BP": {...
-		  	},
-		  "BS": {...
-		  	},
-		  "CCKBC":{...
-		  	},
-		  "Ivy":{...
-		  	},
-		  "OLM":{...
-		  	},
-		  "PC":{...
-		  	},
-		  "PPA":{...
-		  	},
-		  "SCA":{...
-		  	},
-		  "Tri":{...
-		  	}
-		}
+        {   "AA":{
+                "SO": {"mean": "X0"},
+                "SP": {"mean": "X1"},
+                "SR": {"mean": "X2"},
+                "SLM":{"mean": "X3"}
+            },
+            "BP": {...},
+            "BS": {...},
+            "CCKBC":{...},
+            "Ivy":{...},
+            "OLM":{...},
+            "PC":{...},
+            "PPA":{...},
+            "SCA":{...},
+            "Tri":{...}
+        }
 
         ***** (prediction) *****
-		{ "AA":{	
-		   	"SO": {"mean": "X0"},
-		   	"SP": {"mean": "X1"},
-		   	"SR": {"mean": "X2"},
-		   	"SLM":{"mean": "X3"},
-		   	"OUT":{"mean": "X4"}
-		  	},
-		  "BP": {...
-		  	},
-		  "BS": {...
-		  	},
-		  "CCKBC":{...
-		  	},
-		  "Ivy":{...
-		  	},
-		  "OLM":{...
-		  	},
-		  "PC":{...
-		  	},
-		  "PPA":{...
-		  	},
-		  "SCA":{...
-		  	},
-		  "Tri":{...
-		  	}
-		}
+        {   "AA":{
+                "SO": {"value": "X0"},
+                "SP": {"value": "X1"},
+                "SR": {"value": "X2"},
+                "SLM":{"value": "X3"},
+                "OUT":{"value": "X4"}
+            },
+            "BP": {...},
+            "BS": {...},
+            "CCKBC":{...},
+            "Ivy":{...},
+            "OLM":{...},
+            "PC":{...},
+            "PPA":{...},
+            "SCA":{...},
+            "Tri":{...}
+        }
 
         Returns a new dictionary of the form 
-		{ "AA":[X0, X1, X2, X3, X4], "BP":[...] , "BS":[...], "CCKBC":[...], "Ivy":[...], "OLM":[...], "PC":[...], "PPA":[...], "SCA":[...], "Tri":[...] }
-	    """
-	
+        { "AA":[X0, X1, X2, X3, X4], "BP":[...] , "BS":[...], "CCKBC":[...], "Ivy":[...], "OLM":[...],
+        "PC":[...], "PPA":[...], "SCA":[...], "Tri":[...] }
+        """
+
         data_list_0 = list()
-        for key0 in data.keys(): # m-types neurons (AA, BP, BS, CCKBC, Ivy, OLM, PC, PPA, SCA, Tri)
+        for key0, list0 in data.items():  # key0: list of the m-types neurons (AA, BP, BS, CCKBC, Ivy, OLM, PC, PPA, SCA, Tri)
+                                            # list0: list with just one dictionary containing  the m-type cell's
+                                            # synapses fraction in each of the Hippocampus CA1 layers (SO, SP, SR, SLM)
+                                            # and OUT (for prediction data only)
             data_list_1 = list()
-            for key1, dict1 in data[key0].items(): # layers (key1) of CA1 subregion of Hippocampus (SO, SP, SR, SLM) and OUT (for prediction data),
-                                                    # with its synapses fraction dictionary (dict1) for the m-type cell'''
+            for dict1 in dict0.values():  # dict1: list of dictionaries {"mean": "X0"} (observation) or
+                                            # {"value": "X"} (prediction)
+
                 try:
                     synapses_fraction = float(dict1.values()[0])
-                    assert( synapses_fraction <= 1.0 )
-                    data_list_1.extend( synapses_fraction )
+                    assert(synapses_fraction <= 1.0)
+                    data_list_1.extend([synapses_fraction])
                 except:
-                    raise sciunit.Error("Values not in appropriate format. Synapses fraction of an m-type cell must be dimensionless and not larger than 1.0")
+                    raise sciunit.Error("Values not in appropriate format. Synapses fraction of an m-type cell"
+                                        "must be dimensionless and not larger than 1.0")
 
-            if "OUT" not in dict1.keys(): # Observation data
-                data_list_1.extend([0.0])
+            data_list_1.extend([0.0]) if "OUT" not in dict0.keys() # observation data
             data_list_1_q = quantities.Quantity(data_list_1, self.units)
             data_list_0.append(data_list_1_q)
  
@@ -117,12 +104,17 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
     # ----------------------------------------------------------------------
 
     def validate_observation(self, observation):
-        for val in observation.values(): # lists with synapses fraction in each Hippocampus CA1 layer (SO, SP, SR, SLM) and OUT (=0.0 by default)
-                                         # of each m-type cell (AA, BP, BS, CCKBC, Ivy, OLM, PC, PPA, SCA, Tri)'''
+        print observation.values()
+
+        for val in observation.values():  # lists with synapses fraction per Hippocampus CA1 layers (SO, SP, SR, SLM)
+                                            # and OUT (=0.0 by default)
+                                            # of each m-type cell (AA, BP, BS, CCKBC, Ivy, OLM, PC, PPA, SCA, Tri)'''
             try:
+                # print val, type(val)
                 assert type(val) is quantities.Quantity
             except:
-                raise sciunit.ObservationError("Observation about synapses fraction in each CA1-layer must be of the form {'mean': XX}")
+                raise sciunit.ObservationError("Observation about synapses fraction in each CA1-layer must be of "
+                                               "the form {'mean': XX}")
 
     #----------------------------------------------------------------------
 
@@ -141,8 +133,8 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
         try:
             assert len(observation) == len(prediction)
         except Exception:
-            raise sciunit.InvalidScoreError(("Difference in # of m-type cells."
-                                    " Cannot continue test for laminar distribution of synapses across CA1 layers"))
+            raise sciunit.InvalidScoreError(("Difference in # of m-type cells. Cannot continue test"
+                                            "for laminar distribution of synapses across CA1 layers"))
 
         print "observation = ", observation
         print "prediction = ", prediction
@@ -156,7 +148,7 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
             ZScores_cell[key] = ZScores_layer[index]
 
         # self.score = morphounit.scores.CombineZScores.compute(zscores.values())
-	    self.score = ZScores_cell["PC"][0]
+        self.score = ZScores_cell["PC"][0]
 
         # create output directory
         path_test_output = self.directory_output + 'CA1_laminar_distribution_synapses /' + self.model_name + '/'
