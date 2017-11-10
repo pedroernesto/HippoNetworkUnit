@@ -144,13 +144,12 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
                 # zscores_layer[index] = sciunit.scores.ZScore.compute(observation[key0][index], prediction[key0][index])
                 p_value = prediction[key0][index]
                 o_mean = observation[key0][index]
-                value = (p_value - o_mean)/p_value
+                value = p_value - o_mean
                 value = utils.assert_dimensionless(value)
-                print 'ZScore(value) -> ', ZScore(value)
-                # zscores_layer[index] = value
+                zscores_layer.extend([sciunit.scores.ZScore(value)])
+            zscores_cell[key0] = zscores_layer
 
-            zscores_cell[key] = zscores_layer[index]
-
+        print zscores_cell
         # self.score = morphounit.scores.CombineZScores.compute(zscores.values())
         self.score = zscores_cell["PC"][0]
 
@@ -167,7 +166,7 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
         # layers = range(len(observation))
         width = 0.35
         # plt.bar(layers, score_lf, width, color='blue')
-        plt.figlegend(ax_score, ('Z-Score',), 'upper right')
+        # plt.figlegend(ax_score, ('Z-Score',), 'upper right')
         plt.ylabel("Score value")
 
         frame_bars = plt.gca()
@@ -181,7 +180,7 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
         plt.savefig(filename, dpi=600,)
         self.figures.append(filename)
 
-        score = ZScores_cell["PC"][0]
+        score = zscores_cell["PC"][0]
         return score
 
     # ----------------------------------------------------------------------
