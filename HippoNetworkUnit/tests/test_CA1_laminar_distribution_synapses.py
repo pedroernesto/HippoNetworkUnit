@@ -1,8 +1,9 @@
 import sciunit
-import sciunit.scores
 import sciunit.utils as utils
 
-import HippoNetworkUnit.capabilities as cap
+import sciunit.scores
+import HippoNetworkUnit.scores as hpn_scores
+import HippoNetworkUnit.capabilities as hpn_cap
 
 import quantities
 import os
@@ -18,13 +19,14 @@ import matplotlib.pyplot as plt
 class CA1_laminar_distribution_synapses_Test(sciunit.Test):
     """Tests a synapses distribution of different m-types (AA, BP, BS, CCKBC, Ivy, OLM, PC, PPA, SCA, Tri)
        across the layers of Hippocampus CA1 (SO, SP, SR, SLM)"""
-    score_type = sciunit.scores.ZScore
+
+    score_type = hpn_scores.KLdivScore
     id = "/tests/12?version=15"
 
     def __init__(self, observation={}, name="CA1 laminar_distribution_synapses Test"):
 
         description = ("Tests the synapses distribution of different m-types across the Hippocampus CA1 layers")
-        require_capabilities = (cap.Provides_CA1_laminar_distribution_synapses_info,)
+        require_capabilities = (hpn_cap.Provides_CA1_laminar_distribution_synapses_info,)
 
         self.units = quantities.dimensionless
         self.figures = []
@@ -134,31 +136,23 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
             raise sciunit.InvalidScoreError(("Difference in # of m-type cells. Cannot continue test"
                                             "for laminar distribution of synapses across CA1 layers"))
 
-        # print "observation = ", observation, "\n"
-        # print "prediction = ", prediction
+        print "observation = ", observation, "\n"
+        print "prediction = ", prediction
 
         zscores_cell = dict()
-        for key0 in observation.keys():
-            zscores_layer = list()
-            for index in range(len(observation[key0])):
-                # zscores_layer[index] = sciunit.scores.ZScore.compute(observation[key0][index], prediction[key0][index])
-                p_value = prediction[key0][index]
-                o_mean = observation[key0][index]
-                value = p_value - o_mean
-                value = utils.assert_dimensionless(value)
-                zscores_layer.extend([sciunit.scores.ZScore(value)])
-            zscores_cell[key0] = zscores_layer
+        for key0 in observation.keys():  # m-type cell (AA, BP, BS, CCKBC, Ivy, OLM, PC, PPA, SCA, Tri)
+            zscores_cell[key0] = hpn_scores.KLdivScore.compute(observation[key0], prediction[key0])
 
-        print zscores_cell
+        print "zscores_cell = ", zscores_cell, '\n'
         # self.score = morphounit.scores.CombineZScores.compute(zscores.values())
-        self.score = zscores_cell["PC"][0]
+        self.score = zscores_cell["PC"]
 
         # create output directory
         path_test_output = self.directory_output + 'CA1_laminar_distribution_synapses /' + self.model_name + '/'
         if not os.path.exists(path_test_output):
             os.makedirs(path_test_output)
 
-        # save figure with Z-score data
+        # save figure with KLdiv-score data
         '''
             for key0 in observation.keys():
            score_lf[key0] = float(str(zscores[key0]).split()[2])
@@ -180,7 +174,7 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
         plt.savefig(filename, dpi=600,)
         self.figures.append(filename)
 
-        score = zscores_cell["PC"][0]
+        score = zscores_cell["PC"]
         return score
 
     # ----------------------------------------------------------------------
@@ -188,3 +182,4 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
     def bind_score(self, score, model, observation, prediction):
         score.related_data["figures"] = self.figures
         return score
+
