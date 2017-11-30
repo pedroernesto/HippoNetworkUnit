@@ -3,7 +3,6 @@ import sciunit.utils as utils
 
 import numpy as np
 from scipy.stats import entropy
-# from scipy.special import kl_div
 
 class KLdivScore(sciunit.Score):
     """
@@ -29,7 +28,7 @@ class KLdivScore(sciunit.Score):
         obs_values = observation[~np.isnan(observation)]
         pred_values = prediction[~np.isnan(prediction)]
 
-        value = entropy(obs_values, pred_values)
+	value = entropy(obs_values, pred_values)
         value = utils.assert_dimensionless(value)
         return KLdivScore(value)
 
@@ -38,4 +37,4 @@ class KLdivScore(sciunit.Score):
         return self.score
 
     def __str__(self):
-        return 'KL-div = %.6f' % self.score
+        return 'KL-div = %.5f' % self.score

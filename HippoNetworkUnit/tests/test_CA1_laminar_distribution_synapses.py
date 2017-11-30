@@ -20,7 +20,7 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
     """Tests a synapses distribution of different m-types (AA, BP, BS, CCKBC, Ivy, OLM, PC, PPA, SCA, Tri)
        across the layers of Hippocampus CA1 (SO, SP, SR, SLM)"""
 
-    score_type = hpn_scores.KLdivScore
+    score_type = hpn_scores.FreemanTukey
     id = "/tests/12?version=15"
 
     def __init__(self, observation={}, name="CA1 laminar_distribution_synapses Test"):
@@ -137,11 +137,11 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
                                             "for laminar distribution of synapses across CA1 layers"))
 
         print "observation = ", observation, "\n"
-        print "prediction = ", prediction
+        print "prediction = ", prediction, "\n"
 
         zscores_cell = dict()
         for key0 in observation.keys():  # m-type cell (AA, BP, BS, CCKBC, Ivy, OLM, PC, PPA, SCA, Tri)
-            zscores_cell[key0] = hpn_scores.KLdivScore.compute(observation[key0], prediction[key0])
+            zscores_cell[key0] = hpn_scores.FreemanTukey.compute(observation[key0], prediction[key0])
 
         print "zscores_cell = ", zscores_cell, '\n'
         # self.score = morphounit.scores.CombineZScores.compute(zscores.values())
