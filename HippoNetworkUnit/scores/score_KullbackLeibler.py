@@ -37,4 +37,4 @@ class KLdivScore(sciunit.Score):
         return self.score
 
     def __str__(self):
-        return 'KL-div = %.5f' % self.score
+        return '%.5f' % self.score

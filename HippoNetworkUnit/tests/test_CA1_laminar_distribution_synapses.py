@@ -1,5 +1,4 @@
 import sciunit
-import sciunit.utils as utils
 
 import sciunit.scores
 import HippoNetworkUnit.scores as hpn_scores
@@ -8,19 +7,26 @@ import HippoNetworkUnit.capabilities as hpn_cap
 import quantities
 import os
 
-import matplotlib
+# For data manipulation
+import pandas as pd
+
+# For plotting
 # Force matplotlib to not use any Xwindows backend.
+import matplotlib
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
+import seaborn as sns
+
+# score_str = 'KLdivScore'
+score_str = 'FreemanTukeyScore'
 
 # ==============================================================================
-
 
 class CA1_laminar_distribution_synapses_Test(sciunit.Test):
     """Tests a synapses distribution of different m-types (AA, BP, BS, CCKBC, Ivy, OLM, PC, PPA, SCA, Tri)
        across the layers of Hippocampus CA1 (SO, SP, SR, SLM)"""
 
-    score_type = hpn_scores.FreemanTukey
+    score_type = eval('hpn_scores.' + score_str)
     id = "/tests/12?version=15"
 
     def __init__(self, observation={}, name="CA1 laminar_distribution_synapses Test"):
@@ -136,50 +142,39 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
             raise sciunit.InvalidScoreError(("Difference in # of m-type cells. Cannot continue test"
                                             "for laminar distribution of synapses across CA1 layers"))
 
-        print "observation = ", observation, "\n"
-        print "prediction = ", prediction, "\n"
+        # print "observation = ", observation, "\n"
+        # print "prediction = ", prediction, "\n"
 
+        # Computing the score
         zscores_cell = dict()
         for key0 in observation.keys():  # m-type cell (AA, BP, BS, CCKBC, Ivy, OLM, PC, PPA, SCA, Tri)
-            zscores_cell[key0] = hpn_scores.FreemanTukey.compute(observation[key0], prediction[key0])
-
-        print "zscores_cell = ", zscores_cell, '\n'
-        # self.score = morphounit.scores.CombineZScores.compute(zscores.values())
-        self.score = zscores_cell["PC"]
+            zscores_cell[key0] = eval('hpn_scores.' + score_str + '.compute(observation[key0], prediction[key0])')
 
         # create output directory
         path_test_output = self.directory_output + 'CA1_laminar_distribution_synapses /' + self.model_name + '/'
         if not os.path.exists(path_test_output):
             os.makedirs(path_test_output)
 
-        # save figure with KLdiv-score data
-        '''
-            for key0 in observation.keys():
-           score_lf[key0] = float(str(zscores[key0]).split()[2])
-        '''
-        # layers = range(len(observation))
-        width = 0.35
-        # plt.bar(layers, score_lf, width, color='blue')
-        # plt.figlegend(ax_score, ('Z-Score',), 'upper right')
-        plt.ylabel("Score value")
+        # save figure with score data
+        zscores_cell_float = dict.fromkeys(zscores_cell.keys(), [])
+        for key0 in zscores_cell.keys():
+            zscores_cell_float[key0] = zscores_cell[key0].score
 
-        frame_bars = plt.gca()
-        frame_bars.axes.get_xaxis().set_visible(False)
+        zscores_cell_DF = pd.DataFrame(zscores_cell_float, index=[score_str[:-5] + '-score'])
+        print zscores_cell_DF
 
-        fig_bars = plt.gcf()
-        fig_bars.set_size_inches(8, 6)
-
-        filename = \
-        path_test_output + 'score_plot' + '.pdf'
+        axis_obj = sns.barplot(data=zscores_cell_DF)
+        axis_obj.set(xlabel="Cell",ylabel=score_str[:-5] + "-score value")
+        filename = path_test_output + score_str + '_plot' + '.pdf'
         plt.savefig(filename, dpi=600,)
         self.figures.append(filename)
 
-        score = zscores_cell["PC"]
-        return score
+        # self.score = morphounit.scores.CombineZScores.compute(zscores.values())
+        self.score = zscores_cell["PC"]
+        return self.score
 
     # ----------------------------------------------------------------------
 
     def bind_score(self, score, model, observation, prediction):
         score.related_data["figures"] = self.figures
         return score
-

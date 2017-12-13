@@ -6,7 +6,7 @@ import scipy
 from collections import namedtuple
 
 FreemanTukeyResult = namedtuple('FreemanTukeyResult', ('statistic', 'pvalue'))
-class FreemanTukey(sciunit.Score):
+class FreemanTukeyScore(sciunit.Score):
     """
     A Freeman-Tukey score.A float giving the result of a Freeman-Tukey goodness-of-fit test..
     It is useful in the case of small counts (frequencies)
@@ -34,11 +34,11 @@ class FreemanTukey(sciunit.Score):
         pval = utils.assert_dimensionless(pval)
         FreemanTukey_Result = FreemanTukeyResult(stat, pval)
 
-        return FreemanTukey(FreemanTukey_Result.statistic)
+        return FreemanTukeyScore(FreemanTukey_Result.statistic)
 
     @property
     def sort_key(self):
         return self.score
 
     def __str__(self):
-        return 'FreemanTukey-score = %.5f' % self.score
+        return '%.5f' % self.score
