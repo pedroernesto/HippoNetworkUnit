@@ -8,9 +8,9 @@ import quantities
 import os
 
 # For data manipulation
+import numpy as np
 import pandas as pd
 
-# For plotting
 # Force matplotlib to not use any Xwindows backend.
 import matplotlib
 matplotlib.use('Agg')
@@ -146,31 +146,35 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
         # print "prediction = ", prediction, "\n"
 
         # Computing the score
-        zscores_cell = dict()
-        for key0 in observation.keys():  # m-type cell (AA, BP, BS, CCKBC, Ivy, OLM, PC, PPA, SCA, Tri)
-            zscores_cell[key0] = eval('hpn_scores.' + score_str + '.compute(observation[key0], prediction[key0])')
+        scores_cell = dict.fromkeys(observation.keys(),[])
+        for key0 in scores_cell.keys():  # m-type cell (AA, BP, BS, CCKBC, Ivy, OLM, PC, PPA, SCA, Tri)
+            scores_cell[key0] = eval('hpn_scores.' + score_str + '.compute(observation[key0], prediction[key0])')
 
         # create output directory
-        path_test_output = self.directory_output + 'CA1_laminar_distribution_synapses /' + self.model_name + '/'
+        path_test_output = self.directory_output + self.model_name + '/'
         if not os.path.exists(path_test_output):
             os.makedirs(path_test_output)
 
         # save figure with score data
-        zscores_cell_float = dict.fromkeys(zscores_cell.keys(), [])
-        for key0 in zscores_cell.keys():
-            zscores_cell_float[key0] = zscores_cell[key0].score
+        scores_cell_floats = dict.fromkeys(observation.keys(), [])
+        for key0, score_cell in scores_cell.items():
+            scores_cell_floats[key0] = score_cell.score
 
-        zscores_cell_DF = pd.DataFrame(zscores_cell_float, index=[score_str[:-5] + '-score'])
-        print zscores_cell_DF
+        scores_cell_DF = pd.DataFrame(scores_cell_floats, index=[score_str[:-5] + '-score'])
+        print scores_cell_DF, '\n'
 
-        axis_obj = sns.barplot(data=zscores_cell_DF)
-        axis_obj.set(xlabel="Cell",ylabel=score_str[:-5] + "-score value")
+        pal = sns.color_palette('Reds', len(observation))
+        # pal = sns.cubehelix_palette(len(observation))
+        rank = [int(value)-1 for value in scores_cell_DF.rank('columns').values[0]]
+        axis_obj = sns.barplot(data=scores_cell_DF, palette=np.array(pal)[rank])
+        axis_obj.set(xlabel="Cell", ylabel=score_str[:-5] + "-score value")
+
         filename = path_test_output + score_str + '_plot' + '.pdf'
         plt.savefig(filename, dpi=600,)
         self.figures.append(filename)
 
         # self.score = morphounit.scores.CombineZScores.compute(zscores.values())
-        self.score = zscores_cell["PC"]
+        self.score = scores_cell["PC"]
         return self.score
 
     # ----------------------------------------------------------------------
