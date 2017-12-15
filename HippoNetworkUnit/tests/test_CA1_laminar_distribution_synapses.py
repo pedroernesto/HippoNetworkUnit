@@ -167,6 +167,21 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
         rank = [int(value)-1 for value in scores_cell_df.rank('columns').values[0]]
         axis_obj = sns.barplot(data=scores_cell_df, orient='h', palette=np.array(pal)[rank])
         axis_obj.set(xlabel=score_str[:-5] + '-score value', ylabel='Cell')
+        sns.despine()
+
+
+        for i, p in enumerate(axis_obj.patches):
+                axis_obj.annotate("p = %.2f" % p.get_width(),
+                (p.get_x() + p.get_width(), p.get_y() + 0.5),
+                xytext=(5, 10), textcoords='offset points')
+
+        '''
+        for rect in axis_obj.patches:
+            height = rect.get_length()
+            axis_obj.text(rect.get_y() + rect.get_width() / 2., 1.05 * lenght,
+                    '%d' % int(length),
+                    ha='center', va='bottom')
+        '''
 
         filename = path_test_output + score_str + '_plot' + '.pdf'
         plt.savefig(filename, dpi=600,)
