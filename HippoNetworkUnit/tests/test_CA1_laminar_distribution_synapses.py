@@ -157,15 +157,16 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
         scores_cell_floats = dict.fromkeys(observation.keys(), [])
         for key0, score_cell in scores_cell.items():
             scores_cell_floats[key0] = score_cell.score
+        print 'scores_cell_float = ', scores_cell_floats
 
-        scores_cell_DF = pd.DataFrame(scores_cell_floats, index=[score_str[:-5] + '-score'])
-        print scores_cell_DF, '\n'
+        scores_cell_df = pd.DataFrame(scores_cell_floats, index=[score_str[:-5] + '-score'])
+        print scores_cell_df.transpose(), '\n'
 
-        pal = sns.color_palette('Reds', len(observation))
         # pal = sns.cubehelix_palette(len(observation))
-        rank = [int(value)-1 for value in scores_cell_DF.rank('columns').values[0]]
-        axis_obj = sns.barplot(data=scores_cell_DF, palette=np.array(pal)[rank])
-        axis_obj.set(xlabel="Cell", ylabel=score_str[:-5] + "-score value")
+        pal = sns.color_palette('Reds', len(observation))
+        rank = [int(value)-1 for value in scores_cell_df.rank('columns').values[0]]
+        axis_obj = sns.barplot(data=scores_cell_df, orient='h', palette=np.array(pal)[rank])
+        axis_obj.set(xlabel=score_str[:-5] + '-score value', ylabel='Cell')
 
         filename = path_test_output + score_str + '_plot' + '.pdf'
         plt.savefig(filename, dpi=600,)
