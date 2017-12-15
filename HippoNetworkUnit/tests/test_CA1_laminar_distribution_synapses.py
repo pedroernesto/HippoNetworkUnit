@@ -62,7 +62,6 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
             "SCA":{...},
             "Tri":{...}
         }
-
         ***** (prediction) *****
         {   "AA":{
                 "SO": {"value": "X0"},
@@ -81,8 +80,7 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
             "SCA":{...},
             "Tri":{...}
         }
-
-        Returns a new dictionary of the form 
+        Returns a new dictionary of the form
         { "AA":[X0, X1, X2, X3, X4], "BP":[...] , "BS":[...], "CCKBC":[...], "Ivy":[...], "OLM":[...],
         "PC":[...], "PPA":[...], "SCA":[...], "Tri":[...] }
         """
@@ -148,7 +146,7 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
         # Computing the score
         scores_cell = dict.fromkeys(observation.keys(),[])
         for key0 in scores_cell.keys():  # m-type cell (AA, BP, BS, CCKBC, Ivy, OLM, PC, PPA, SCA, Tri)
-            scores_cell[key0] = eval('hpn_scores.' + score_str + '.compute(observation[key0], prediction[key0])')
+            scores_cell[key0] = getattr(hpn_scores, score_str).compute(observation[key0], prediction[key0])
 
         # create output directory
         path_test_output = self.directory_output + self.model_name + '/'

@@ -42,3 +42,4 @@ class FreemanTukeyScore(sciunit.Score):
 
     def __str__(self):
         return '%.5f' % self.score
+
