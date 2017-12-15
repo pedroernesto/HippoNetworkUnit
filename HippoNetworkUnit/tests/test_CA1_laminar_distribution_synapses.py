@@ -156,11 +156,11 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
         # save figure with score data
         scores_cell_floats = dict.fromkeys(observation.keys(), [])
         for key0, score_cell in scores_cell.items():
-            scores_cell_floats[key0] = score_cell.score
-        print 'scores_cell_float = ', scores_cell_floats
+            scores_cell_floats[key0] = [score_cell.score.statistic, score_cell.score.pvalue]
 
-        scores_cell_df = pd.DataFrame(scores_cell_floats, index=[score_str[:-5] + '-score'])
-        print scores_cell_df.transpose(), '\n'
+        scores_cell_df = pd.DataFrame(scores_cell_floats, index=[score_str[:-5] + '-score', 'p-value'])
+        print scores_cell_df
+        #.transpose(), '\n'
 
         # pal = sns.cubehelix_palette(len(observation))
         pal = sns.color_palette('Reds', len(observation))
@@ -169,19 +169,10 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
         axis_obj.set(xlabel=score_str[:-5] + '-score value', ylabel='Cell')
         sns.despine()
 
-
         for i, p in enumerate(axis_obj.patches):
-                axis_obj.annotate("p = %.2f" % p.get_width(),
-                (p.get_x() + p.get_width(), p.get_y() + 0.5),
-                xytext=(5, 10), textcoords='offset points')
-
-        '''
-        for rect in axis_obj.patches:
-            height = rect.get_length()
-            axis_obj.text(rect.get_y() + rect.get_width() / 2., 1.05 * lenght,
-                    '%d' % int(length),
-                    ha='center', va='bottom')
-        '''
+                axis_obj.annotate("p = %.2f" % scores_cell_df[:, i],
+                xy=(p.get_x() + p.get_width(), p.get_y() + 0.5),
+                xytext=(3, 0), textcoords='offset points')
 
         filename = path_test_output + score_str + '_plot' + '.pdf'
         plt.savefig(filename, dpi=600,)
@@ -189,6 +180,7 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
 
         # self.score = morphounit.scores.CombineZScores.compute(zscores.values())
         self.score = scores_cell["PC"]
+
         return self.score
 
     # ----------------------------------------------------------------------

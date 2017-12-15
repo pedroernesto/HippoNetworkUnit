@@ -12,7 +12,7 @@ class FreemanTukeyScore(sciunit.Score):
     It is useful in the case of small counts (frequencies)
     """
     
-    _allowed_types = (float,)
+    _allowed_types = (tuple,)
 
     _description = ('A Freeman-Tukey score. A float giving the result of a Freeman-Tukey goodness-of-fit test.'
                     'It is useful in the case of small counts (frequencies)')
@@ -34,12 +34,12 @@ class FreemanTukeyScore(sciunit.Score):
         pval = utils.assert_dimensionless(pval)
         FreemanTukey_Result = FreemanTukeyResult(stat, pval)
 
-        return FreemanTukeyScore(FreemanTukey_Result.statistic)
+        return FreemanTukeyScore(FreemanTukey_Result)
 
     @property
     def sort_key(self):
         return self.score
 
     def __str__(self):
-        return '%.5f' % self.score
+        return '%.5f' % self.score.statistic
 
