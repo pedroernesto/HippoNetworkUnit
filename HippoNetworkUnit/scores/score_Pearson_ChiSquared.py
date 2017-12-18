@@ -4,7 +4,7 @@ import sciunit.utils as utils
 import numpy as np
 from scipy.stats import power_divergence
 
-class Pearson_ChiSquared(sciunit.Score):
+class PearsonChiSquaredScore(sciunit.Score):
     """
     A Pearson score. A float giving the result of
     a Pearson's chi-squared goodness-of-fit test
@@ -30,11 +30,11 @@ class Pearson_ChiSquared(sciunit.Score):
         utils.assert_dimensionless(Pearson_Result.statistic)
         utils.assert_dimensionless(Pearson_Result.pvalue)
 
-        return Pearson_ChiSquared(Pearson_Result.statistic)
+        return PearsonChiSquaredScore(Pearson_Result)
 
     @property
     def sort_key(self):
         return self.score
 
     def __str__(self):
-        return 'Pearson''s chi-squared-score = %.5f' % self.score
+        return 'Pearson''s chi-squared-score = %.5f' % self.score.statistic

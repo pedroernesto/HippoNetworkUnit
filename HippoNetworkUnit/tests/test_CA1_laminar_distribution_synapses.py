@@ -17,8 +17,8 @@ matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 import seaborn as sns
 
-# score_str = 'KLdivScore'
-score_str = 'FreemanTukeyScore'
+score_str = 'NeymanScore'
+# score_str = 'FreemanTukeyScore'
 
 # ==============================================================================
 
@@ -158,19 +158,20 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
         for key0, score_cell in scores_cell.items():
             scores_cell_floats[key0] = [score_cell.score.statistic, score_cell.score.pvalue]
 
-        scores_cell_df = pd.DataFrame(scores_cell_floats, index=[score_str[:-5] + '-score', 'p-value'])
-        print scores_cell_df
-        #.transpose(), '\n'
+        score_label = score_str[:-5] + '-score'
+        scores_cell_df = pd.DataFrame(scores_cell_floats, index=[score_label, 'p-value'])
+        scores_cell_df = scores_cell_df.transpose()
+        print scores_cell_df, '\n'
 
         # pal = sns.cubehelix_palette(len(observation))
         pal = sns.color_palette('Reds', len(observation))
-        rank = [int(value)-1 for value in scores_cell_df.rank('columns').values[0]]
-        axis_obj = sns.barplot(data=scores_cell_df, orient='h', palette=np.array(pal)[rank])
-        axis_obj.set(xlabel=score_str[:-5] + '-score value', ylabel='Cell')
+        rank = [int(value)-1 for value in scores_cell_df[score_label].rank()]
+        axis_obj = sns.barplot(x=scores_cell_df[score_label], y=scores_cell_df.index, palette=np.array(pal)[rank])
+        axis_obj.set(xlabel=score_label, ylabel='Cell')
         sns.despine()
 
         for i, p in enumerate(axis_obj.patches):
-                axis_obj.annotate("p = %.2f" % scores_cell_df[:, i],
+                axis_obj.annotate("p = %.2f" % scores_cell_df['p-value'].values[i],
                 xy=(p.get_x() + p.get_width(), p.get_y() + 0.5),
                 xytext=(3, 0), textcoords='offset points')
 

@@ -4,7 +4,7 @@ import sciunit.utils as utils
 import numpy as np
 from scipy.stats import power_divergence
 
-class Neyman(sciunit.Score):
+class NeymanScore(sciunit.Score):
     """
     A Neyman score. A float giving the result of
     a Neyman goodness-of-fit test
@@ -30,11 +30,11 @@ class Neyman(sciunit.Score):
         utils.assert_dimensionless(Neyman_Result.statistic)
         utils.assert_dimensionless(Neyman_Result.pvalue)
 
-        return Neyman(Neyman_Result.statistic)
+        return NeymanScore(Neyman_Result)
 
     @property
     def sort_key(self):
         return self.score
 
     def __str__(self):
-        return 'Neyman-score = %.5f' % self.score
+        return 'Neyman-score = %.5f' % self.score.statistic

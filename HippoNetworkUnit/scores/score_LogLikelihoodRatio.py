@@ -4,7 +4,7 @@ import sciunit.utils as utils
 import numpy as np
 from scipy.stats import power_divergence
 
-class Log_LikelihoodRatio(sciunit.Score):
+class Log_LikelihoodRatioScore(sciunit.Score):
     """
     A Log-Likelihood Ratio score. A float giving the result of
     a Log-Likelihood goodness-of-fit test. Also known as the G-test
@@ -30,11 +30,11 @@ class Log_LikelihoodRatio(sciunit.Score):
         utils.assert_dimensionless(Log_LikelihoodRatio_Result.statistic)
         utils.assert_dimensionless(Log_LikelihoodRatio_Result.pvalue)
 
-        return Log_LikelihoodRatio(Log_LikelihoodRatio_Result.statistic)
+        return Log_LikelihoodRatioScore(Log_LikelihoodRatio_Result)
 
     @property
     def sort_key(self):
         return self.score
 
     def __str__(self):
-        return 'Log-Likelihood-ratio score = %.5f' % self.score
+        return 'Log-Likelihood-ratio score = %.5f' % self.score.statistic
