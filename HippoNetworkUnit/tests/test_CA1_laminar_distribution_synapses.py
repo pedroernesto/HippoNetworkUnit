@@ -17,8 +17,8 @@ matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 import seaborn as sns
 
-score_str = 'NeymanScore'
-# score_str = 'FreemanTukeyScore'
+# score_str = 'FreemanTukey1950Score'
+score_str = 'FreemanTukey1959Score'
 
 # ==============================================================================
 
