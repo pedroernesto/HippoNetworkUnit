@@ -17,8 +17,11 @@ matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 import seaborn as sns
 
+score_str = 'PearsonChiSquaredScore'
+# score_str = 'NeymanScore'
+# score_str = 'Log_LikelihoodRatioScore'
 # score_str = 'FreemanTukey1950Score'
-score_str = 'FreemanTukey1959Score'
+# score_str = 'FreemanTukey1959Score'
 
 # ==============================================================================
 
@@ -156,7 +159,7 @@ class CA1_laminar_distribution_synapses_Test(sciunit.Test):
         # save figure with score data
         scores_cell_floats = dict.fromkeys(observation.keys(), [])
         for key0, score_cell in scores_cell.items():
-            scores_cell_floats[key0] = [score_cell.score.statistic, score_cell.score.pvalue]
+            scores_cell_floats[key0] = [score_cell.score.statistic_n, score_cell.score.pvalue]
 
         score_label = score_str[:-5] + '-score'
         scores_cell_df = pd.DataFrame(scores_cell_floats, index=[score_label, 'p-value'])
