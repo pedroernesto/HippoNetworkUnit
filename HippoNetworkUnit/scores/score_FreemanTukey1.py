@@ -6,9 +6,9 @@ import scipy
 from collections import namedtuple
 
 FreemanTukeyResult = namedtuple('FreemanTukeyResult', ('statistic_n', 'pvalue'))
-class FreemanTukey1950Score(sciunit.Score):
+class FreemanTukey1Score(sciunit.Score):
     """
-    A Freeman-Tukey score.A float giving the result of a Freeman-Tukey goodness-of-fit test..
+    A Freeman-Tukey score.A float giving the result of a Freeman-Tukey goodness-of-fit test.
     It is useful in the case of small counts (frequencies)
     """
     
@@ -39,7 +39,7 @@ class FreemanTukey1950Score(sciunit.Score):
         stat_n = abs(stat-chisq_mean)/chisq_std
         FreemanTukey_Result = FreemanTukeyResult(stat_n, pval)
 
-        return FreemanTukey1950Score(FreemanTukey_Result)
+        return FreemanTukey1Score(FreemanTukey_Result)
 
     @property
     def sort_key(self):

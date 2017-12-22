@@ -17,15 +17,11 @@ matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 import seaborn as sns
 
-score_str = 'PearsonChiSquaredScore'
-# score_str = 'NeymanScore'
-# score_str = 'Log_LikelihoodRatioScore'
-# score_str = 'FreemanTukey1950Score'
-# score_str = 'FreemanTukey1959Score'
 
 # ==============================================================================
+score_str = 'KLdivScore'
 
-class CA1_laminar_distribution_synapses_Test(sciunit.Test):
+class CA1_laminar_distribution_synapses_KLdivTest(sciunit.Test):
     """Tests a synapses distribution of different m-types (AA, BP, BS, CCKBC, Ivy, OLM, PC, PPA, SCA, Tri)
        across the layers of Hippocampus CA1 (SO, SP, SR, SLM)"""
 
