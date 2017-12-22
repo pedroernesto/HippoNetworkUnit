@@ -155,10 +155,10 @@ class CA1_laminar_distribution_synapses_KLdivTest(sciunit.Test):
         # save figure with score data
         scores_cell_floats = dict.fromkeys(observation.keys(), [])
         for key0, score_cell in scores_cell.items():
-            scores_cell_floats[key0] = [score_cell.score.statistic_n, score_cell.score.pvalue]
+            scores_cell_floats[key0] = [score_cell.score]
 
         score_label = score_str[:-5] + '-score'
-        scores_cell_df = pd.DataFrame(scores_cell_floats, index=[score_label, 'p-value'])
+        scores_cell_df = pd.DataFrame(scores_cell_floats, index=[score_label])
         scores_cell_df = scores_cell_df.transpose()
         print scores_cell_df, '\n'
 
@@ -168,11 +168,6 @@ class CA1_laminar_distribution_synapses_KLdivTest(sciunit.Test):
         axis_obj = sns.barplot(x=scores_cell_df[score_label], y=scores_cell_df.index, palette=np.array(pal)[rank])
         axis_obj.set(xlabel=score_label, ylabel='Cell')
         sns.despine()
-
-        for i, p in enumerate(axis_obj.patches):
-                axis_obj.annotate("p = %.2f" % scores_cell_df['p-value'].values[i],
-                xy=(p.get_x() + p.get_width(), p.get_y() + 0.5),
-                xytext=(3, 0), textcoords='offset points')
 
         filename = path_test_output + score_str + '_plot' + '.pdf'
         plt.savefig(filename, dpi=600,)
