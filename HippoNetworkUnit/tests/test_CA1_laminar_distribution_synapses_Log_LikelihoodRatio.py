@@ -21,7 +21,7 @@ import seaborn as sns
 # ==============================================================================
 score_str = 'Log_LikelihoodRatioScore'
 
-class CA1_laminar_distribution_synapses_Log_LikelihoodRatioTest(sciunit.Test):
+class CA1_laminar_distribution_synapses_GTest(sciunit.Test):
     """Tests a synapses distribution of different m-types (AA, BP, BS, CCKBC, Ivy, OLM, PC, PPA, SCA, Tri)
        across the layers of Hippocampus CA1 (SO, SP, SR, SLM)"""
 
