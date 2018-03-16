@@ -12,7 +12,7 @@ class FreemanTukey2Score(sciunit.Score):
     It is useful in the case of small counts (frequencies)
     """
     
-    _allowed_types = (tuple,)
+    _allowed_types = (float,tuple,)
 
     _description = ('A Freeman-Tukey score. A float giving the result of a Freeman-Tukey goodness-of-fit test.'
                     'It is useful in the case of small counts (frequencies)')

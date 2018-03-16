@@ -3,7 +3,7 @@ import sciunit
 import sciunit.scores
 import HippoNetworkUnit.scores as hpn_scores
 import HippoNetworkUnit.capabilities as hpn_cap
-
+ 
 import quantities
 import os
 
@@ -174,14 +174,14 @@ class CA1_laminar_distribution_synapses_FreemanTukey2Test(sciunit.Test):
                 xy=(p.get_x() + p.get_width(), p.get_y() + 0.5),
                 xytext=(3, 0), textcoords='offset points')
 
-        filename = path_test_output + score_str + '_plot' + '.pdf'
+        filename = path_test_output + score_str + '_plot' + '.png'
         plt.savefig(filename, dpi=600,)
         self.figures.append(filename)
 
         # self.score = morphounit.scores.CombineZScores.compute(zscores.values())
-        self.score = scores_cell["PC"]
+        self.score = scores_cell_floats["PC"][0]
 
-        return self.score
+        return hpn_scores.FreemanTukey2Score(self.score)
 
     # ----------------------------------------------------------------------
 
