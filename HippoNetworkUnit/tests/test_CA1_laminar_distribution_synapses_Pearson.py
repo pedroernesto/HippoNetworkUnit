@@ -30,7 +30,7 @@ class CA1_laminar_distribution_synapses_PearsonTest(sciunit.Test):
 
     def __init__(self, observation={}, name="CA1 laminar_distribution_synapses Test"):
 
-        description = ("Tests the synapses distribution of different m-types across the Hippocampus CA1 layers")
+        description = "Tests the synapses distribution of different m-types across the Hippocampus CA1 layers"
         require_capabilities = (hpn_cap.Provides_CA1_laminar_distribution_synapses_info,)
 
         self.units = quantities.dimensionless
