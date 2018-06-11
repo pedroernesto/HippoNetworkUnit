@@ -26,7 +26,6 @@ class CA1_laminar_distribution_synapses_FreemanTukey2Test(sciunit.Test):
        across the layers of Hippocampus CA1 (SO, SP, SR, SLM)"""
 
     score_type = eval('hpn_scores.' + score_str)
-    id = "/tests/12?version=15"
 
     def __init__(self, observation={}, name="CA1 laminar_distribution_synapses Test"):
 
