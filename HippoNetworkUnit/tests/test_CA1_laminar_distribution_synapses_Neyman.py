@@ -112,11 +112,10 @@ class CA1_laminar_distribution_synapses_NeymanTest(sciunit.Test):
         for val in observation.values():  # val0: a list with synapses fraction in each of the
                                             # Hippocampus CA1 layers (SO, SP, SR, SLM) and OUT (=0.0 by default)
                                             # for each m-type cell (AA, BP, BS, CCKBC, Ivy, OLM, PC, PPA, SCA, Tri)
-            try:
-                assert type(val) is quantities.Quantity
-            except:
-                raise sciunit.ObservationError("Observation about synapses fraction in each CA1-layer"
-                                               "must be of the form {'mean': XX}")
+
+            assert type(val) is quantities.Quantity, \
+                sciunit.ObservationError("Observation about synapses fraction in each CA1-layer"
+                                         "must be of the form {'mean': XX}")
 
     # ----------------------------------------------------------------------
 
@@ -133,11 +132,10 @@ class CA1_laminar_distribution_synapses_NeymanTest(sciunit.Test):
 
     def compute_score(self, observation, prediction, verbose=True):
         """Implementation of sciunit.Test.score_prediction"""
-        try:
-            assert len(observation) == len(prediction)
-        except Exception:
-            raise sciunit.InvalidScoreError(("Difference in # of m-type cells. Cannot continue test"
-                                            "for laminar distribution of synapses across CA1 layers"))
+
+        assert len(observation) == len(prediction), \
+            sciunit.InvalidScoreError(("Difference in # of m-type cells. Cannot continue test"
+                                        "for laminar distribution of synapses across CA1 layers"))
 
         # print "observation = ", observation, "\n"
         # print "prediction = ", prediction, "\n"
