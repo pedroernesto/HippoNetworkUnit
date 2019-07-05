@@ -175,8 +175,8 @@ class CA1_laminar_distribution_synapses_FreemanTukey1Test(sciunit.Test):
         plt.savefig(filename, dpi=600,)
         self.figures.append(filename)
 
-        # self.score = morphounit.scores.CombineZScores.compute(zscores.values())
-        self.score = scores_cell_floats["PC"][0]
+	scores_array = scores_cell_df[score_label].array
+        self.score = sum(map(abs,scores_array)) / len(scores_array)
 
         return hpn_scores.FreemanTukey1Score(self.score)
 
