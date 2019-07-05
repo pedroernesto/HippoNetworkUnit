@@ -5,26 +5,17 @@ import json
 
 class CA1_laminar_distribution_synapses(sciunit.Model):
 
-    def __init__(self, name="CA1_laminar_distribution_synapses", CA1_laminar_distribution_synapses_info={}):
+    def __init__(self, name="CA1_laminar_distribution_synapses", CA1_laminar_distribution_synapses_model=None):
 
         sciunit.Model.__init__(self, name=name)
         self.name = name
         self.description = "HBP Hippocampus CA1's output to test synapses distribution across CA1 layers"
-        self.CA1_laminar_distribution_synapses_info = CA1_laminar_distribution_synapses_info
-        self.set_CA1_laminar_distribution_synapses_info_default()
-
-    def set_CA1_laminar_distribution_synapses_info_default(self):
-        model_prediction_path = "./models/model_predictions/CA1_laminar_distribution_synapses_HBPmod.json"
-        with open(model_prediction_path, 'r') as fp:
-            data = json.load(fp)
-        self.CA1_laminar_distribution_synapses_info = data
+        self.CA1_laminar_distribution_synapses_info = CA1_laminar_distribution_synapses_model
 
     def get_CA1_laminar_distribution_synapses_info(self):
         return self.CA1_laminar_distribution_synapses_info
 
-
 # ==============================================================================
-
 
 class CA1Layers_NeuritePathDistance(sciunit.Model):
 

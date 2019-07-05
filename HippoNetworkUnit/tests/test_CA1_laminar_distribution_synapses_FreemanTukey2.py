@@ -157,7 +157,7 @@ class CA1_laminar_distribution_synapses_FreemanTukey2Test(sciunit.Test):
         score_label = score_str[:-5] + '-score'
         scores_cell_df = pd.DataFrame(scores_cell_floats, index=[score_label, 'p-value'])
         scores_cell_df = scores_cell_df.transpose()
-        print scores_cell_df, '\n'
+        print scores_cell_df[score_label], '\n'
 
         # pal = sns.cubehelix_palette(len(observation))
         pal = sns.color_palette('Reds', len(observation))
@@ -175,8 +175,8 @@ class CA1_laminar_distribution_synapses_FreemanTukey2Test(sciunit.Test):
         plt.savefig(filename, dpi=600,)
         self.figures.append(filename)
 
-        # self.score = morphounit.scores.CombineZScores.compute(zscores.values())
-        self.score = scores_cell_floats["PC"][0]
+	scores_array = scores_cell_df[score_label].array
+        self.score = sum(map(abs,scores_array)) / len(scores_array)
 
         return hpn_scores.FreemanTukey2Score(self.score)
 
