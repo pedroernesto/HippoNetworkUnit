@@ -13,7 +13,7 @@ import pandas as pd
 
 # Force matplotlib to not use any Xwindows backend.
 import matplotlib
-matplotlib.use('Agg')
+# matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 import seaborn as sns
 
