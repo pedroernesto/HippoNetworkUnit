@@ -1,5 +1,6 @@
 import sciunit
 import sciunit.utils as utils
+import quantities as pq
 
 import numpy as np
 from scipy.stats import entropy
@@ -12,7 +13,7 @@ class KLdivScore(sciunit.Score):
     indicates that almost similar behavior of both probabilities can be expected.
     The contrary holds when the divergence's value is 1.
     """
-    
+
     _allowed_types = (float,)
 
     _description = ('The divergence from the probability P_mod to the probability P_obs, being computed '
@@ -28,7 +29,7 @@ class KLdivScore(sciunit.Score):
         obs_values = observation[~np.isnan(observation)]
         pred_values = prediction[~np.isnan(prediction)]
 
-	value = entropy(obs_values, pred_values)
+        value = entropy(pk=obs_values, qk=pred_values)
         value = utils.assert_dimensionless(value)
         return KLdivScore(value)
 

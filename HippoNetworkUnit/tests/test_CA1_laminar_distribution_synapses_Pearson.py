@@ -20,6 +20,11 @@ import seaborn as sns
 
 # ==============================================================================
 score_str = 'PearsonChiSquaredScore'
+"""The Cressie-Read power divergence implemented in scipy.stats is used here.
+Accordingly, this test is invalid when the predicted and observed outcomes (number of boutons) in each
+layer are too small. A typical rule is that all of those outcome values should be at least 5.
+It is also possible that the asymptotic distribution is not a chisquare, in which case this test is not appropriate.
+(comment addapted from the one in 'power_divergence' method of scipy.stats"""
 
 class CA1_laminar_distribution_synapses_PearsonTest(sciunit.Test):
     """Tests a synapses distribution of different m-types (AA, BP, BS, CCKBC, Ivy, OLM, PC, PPA, SCA, Tri)
@@ -66,7 +71,7 @@ class CA1_laminar_distribution_synapses_PearsonTest(sciunit.Test):
                 "SP": {"value": "X1"},
                 "SR": {"value": "X2"},
                 "SLM":{"value": "X3"},
-                "OUT":{"value": "X4"}
+                "out":{"value": "X4"}
             },
             "BP": {...},
             "BS": {...},
@@ -98,7 +103,7 @@ class CA1_laminar_distribution_synapses_PearsonTest(sciunit.Test):
                     raise sciunit.Error("Values not in appropriate format. Synapses fraction of an m-type cell"
                                         "must be dimensionless and not larger than 1.0")
 
-            if "OUT" not in dict0.keys(): data_list_1.extend([0.0])  # observation data
+            if "out" not in [x.lower() for x in dict0.keys()]: data_list_1.extend([0.0])  # observation data
             data_list_1_q = quantities.Quantity(data_list_1, self.units)
             data_new_dict[key0] = data_list_1_q
 
@@ -174,10 +179,10 @@ class CA1_laminar_distribution_synapses_PearsonTest(sciunit.Test):
         plt.savefig(filename, dpi=600,)
         self.figures.append(filename)
 
-	scores_array = scores_cell_df[score_label].array
+        scores_array = scores_cell_df[score_label].array
         self.score = sum(map(abs,scores_array)) / len(scores_array)
 
-        return self.score
+        return hpn_scores.PearsonChiSquaredScore(self.score)
 
     # ----------------------------------------------------------------------
 

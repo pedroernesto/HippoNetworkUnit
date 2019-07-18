@@ -98,7 +98,7 @@ class CA1_laminar_distribution_synapses_KLdivTest(sciunit.Test):
                     raise sciunit.Error("Values not in appropriate format. Synapses fraction of an m-type cell"
                                         "must be dimensionless and not larger than 1.0")
 
-            if "OUT" not in dict0.keys(): data_list_1.extend([0.0])  # observation data
+            if "out" not in [x.lower() for x in dict0.keys()]: data_list_1.extend([0.0])  # observation data
             data_list_1_q = quantities.Quantity(data_list_1, self.units)
             data_new_dict[key0] = data_list_1_q
 
@@ -169,10 +169,10 @@ class CA1_laminar_distribution_synapses_KLdivTest(sciunit.Test):
         plt.savefig(filename, dpi=600,)
         self.figures.append(filename)
 
-	scores_array = scores_cell_df[score_label].array
+        scores_array = scores_cell_df[score_label].array
         self.score = sum(map(abs,scores_array)) / len(scores_array)
 
-        return self.score
+        return hpn_scores.KLdivScore(self.score)
 
     # ----------------------------------------------------------------------
 

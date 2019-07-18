@@ -1,5 +1,6 @@
 import sciunit
 import sciunit.utils as utils
+import quantities as pq
 
 import numpy as np
 import scipy
@@ -11,7 +12,7 @@ class FreemanTukey1Score(sciunit.Score):
     A Freeman-Tukey score.A float giving the result of a Freeman-Tukey goodness-of-fit test.
     It is useful in the case of small counts (frequencies)
     """
-    
+
     _allowed_types = (float,tuple,)
 
     _description = ('A Freeman-Tukey score. A float giving the result of a Freeman-Tukey goodness-of-fit test.'
@@ -25,6 +26,11 @@ class FreemanTukey1Score(sciunit.Score):
 
         obs_values = observation[~np.isnan(observation)]
         pred_values = prediction[~np.isnan(prediction)]
+
+        assert(all(x<=1.00 for x in obs_values) and all(x<=1.00 for x in pred_values)), \
+            "Probabiltity values should not be larger than 1.0"
+        obs_values *= 100
+        pred_values *= 100        
 
         dof = len(obs_values)-1  # degrees of freedom for the Chi-squared distribution
         stat = 4*sum((np.sqrt(obs_values) - np.sqrt(pred_values))**2)
@@ -47,4 +53,3 @@ class FreemanTukey1Score(sciunit.Score):
 
     def __str__(self):
         return '%.5f' % self.score.statistic_n
-
