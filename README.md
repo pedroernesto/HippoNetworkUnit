@@ -13,5 +13,5 @@ This repository contains validation tests for microcircuit models of CA1 region,
 - SciUnit
 
 <div>
-  <img src="https://github.com/pedroernesto/HippoNetworkUnit/blob/master/AxonalBoutonsCounts_methods.png" alt="Example1" width="95%">
+  <img src="https://github.com/pedroernesto/HippoNetworkUnit/blob/master/AxonalBoutonsCounts_methods.png" alt="Example1" width="100%">
 </div>
